@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "5258189836",
+    "project_id": "houzeocontacts-5599e",
+    "storage_bucket": "houzeocontacts-5599e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5258189836:android:aa4dd088e2722c0ce2a229",
+        "android_client_info": {
+          "package_name": "com.example.houzeocontacts"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRTp-Rk0KoU9vPw-q5ivw-U8yAPbc-_58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
