@@ -8,29 +8,56 @@ import 'package:houzeocontacts/widgets/custom_button.dart';
 import 'package:houzeocontacts/widgets/custom_snack.dart';
 import 'package:houzeocontacts/widgets/custom_textfeild.dart';
 
-class AddContact extends StatelessWidget {
-  AddContact({super.key});
+class EditContact extends StatelessWidget {
+  final data;
+  String firstName;
+  String secondName;
+  int phone;
+  String email;
+  String id;
+  String nickname;
+  EditContact(
+      {super.key,
+      required this.data,
+      required this.email,
+      required this.firstName,
+      required this.id,
+      required this.nickname,
+      required this.phone,
+      required this.secondName});
 
-  final GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-    final TextEditingController emailController = TextEditingController();
-
-
-  String? optionalValidator(String? value, String? Function(String?) validator) {
+  String? optionalValidator(
+      String? value, String? Function(String?) validator) {
     if (value == null || value.isEmpty) return null;
     return validator(value);
   }
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<FormState> formkey = GlobalKey<FormState>();
+    final TextEditingController nameController =
+        TextEditingController(text: firstName);
+    final TextEditingController lastNameController =
+        TextEditingController(text: secondName);
+    final TextEditingController phoneController =
+        TextEditingController(text: phone.toString());
+    final TextEditingController emailController =
+        TextEditingController(text: email);
+    final TextEditingController nickController =
+        TextEditingController(text: nickname);
+    context.read<AddContactBloc>().add(IdChanges(id));
+    context.read<AddContactBloc>().add(FirstNameChanges(firstName));
+    context.read<AddContactBloc>().add(SecondNameChanges(secondName));
+    context.read<AddContactBloc>().add(PhoneChanges(phone));
+    context.read<AddContactBloc>().add(UserEmail(email));
+    context.read<AddContactBloc>().add(NickNameChanges(nickname));
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.googleGray,
         title: const Text(
-          'Create contact',
+          'Edit contact',
           style: TextStyle(
             color: AppColors.whiteColor,
           ),
@@ -58,6 +85,7 @@ class AddContact extends StatelessWidget {
                 ),
                 AppConstants.kheight30,
                 CustomTextFeild2(
+                  controller: lastNameController,
                   validator: (value) =>
                       optionalValidator(value, Validators.validateLastName),
                   onChanged: (p0) =>
@@ -97,6 +125,7 @@ class AddContact extends StatelessWidget {
                 ),
                 AppConstants.kheight30,
                 CustomTextFeild2(
+                  controller: nickController,
                   validator: (value) =>
                       optionalValidator(value, Validators.validateNickname),
                   onChanged: (p0) =>
@@ -112,12 +141,10 @@ class AddContact extends StatelessWidget {
                   content: 'Save',
                   ontap: () {
                     if (formkey.currentState!.validate()) {
-                      context.read<AddContactBloc>().add(FormSubmit());
-                       context.read<AddContactBloc>().add(ClearForm());
-                       ScaffoldMessenger.of(context).showSnackBar(customSnack(
-                        
-                        'Contact Added',
-                        'Contact saved sucessfully',
+                      context.read<AddContactBloc>().add(UpdateFormSubmit());
+                      ScaffoldMessenger.of(context).showSnackBar(customSnack(
+                        'Contact updated',
+                        'Contact updated sucessfully',
                         const Icon(
                           Icons.done,
                           color: Colors.green,
@@ -126,6 +153,7 @@ class AddContact extends StatelessWidget {
                         Colors.green,
                       ));
                       Navigator.of(context).pop();
+                      
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(customSnack(
                         'Add Details',
@@ -138,7 +166,6 @@ class AddContact extends StatelessWidget {
                         Colors.red,
                       ));
                     }
-                    
                   },
                 )
               ],

@@ -18,7 +18,7 @@ class GetContactInfoBloc
     emit(GetUserContactsLoading());
     try {
       Stream<QuerySnapshot> catgeoryStream = (contactServices
-          .getUserContactDetails()) as Stream<QuerySnapshot<Object?>>;
+          .getUserContactDetails());
       catgeoryStream.listen((snapshots) {
         final data = snapshots.docs;
         add(FetchedDataContact(data));

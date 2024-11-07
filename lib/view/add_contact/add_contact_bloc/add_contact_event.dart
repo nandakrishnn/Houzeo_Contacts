@@ -24,5 +24,11 @@ final class NickNameChanges extends AddContactEvent{
   NickNameChanges(this.userNickName);
   final String userNickName;
 }
+
+final class IdChanges extends AddContactEvent{
+  IdChanges(this.id);
+  final String id;
+}
+class ClearForm extends AddContactEvent {}
 final class UpdateFormSubmit extends AddContactEvent{}
 final class FormSubmit extends AddContactEvent{}

@@ -36,5 +36,16 @@ class ContactServices{
         .collection('UserContacts')
         .snapshots();
   }
-
+  Future<bool> updatedUserDetails(
+       String userFirstname, String userSecondname,String userEmail,int userPhone,String userNickname,String id,) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('UserContacts')
+          .doc(id)
+          .update({'FirstName': userFirstname, 'SecondName': userSecondname,'UserEmail':userEmail,'UserPhone':userPhone,'UserNickName':userNickname});
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

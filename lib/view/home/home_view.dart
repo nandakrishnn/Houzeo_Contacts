@@ -8,24 +8,27 @@ import 'package:houzeocontacts/constants/colors.dart';
 import 'package:houzeocontacts/services/contact_services.dart';
 import 'package:houzeocontacts/view/add_contact/add_contact.dart';
 import 'package:houzeocontacts/view/home/get_contact_bloc/get_contact_info_bloc.dart';
+import 'package:houzeocontacts/view/view_contact/view_contact.dart';
 
 class HomeContacts extends StatelessWidget {
   const HomeContacts({super.key});
 
   @override
   Widget build(BuildContext context) {
-     Color _getRandomColor() {
-    return Color.fromARGB(
-      255,
-      Random().nextInt(256),
-      Random().nextInt(256),
-      Random().nextInt(256),
-    );
-  }
+Color getRandomColor() {
+  Random random = Random();
+  
+
+  int red = random.nextInt(128) + 127; 
+  int green = random.nextInt(128) + 127;
+  int blue = random.nextInt(128) + 127; 
+  
+  return Color.fromARGB(255, red, green, blue);
+}
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Contacts List',style: TextStyle(color: AppColors.whiteColor),),
+        title: const Text('Contacts List',style: TextStyle(color: AppColors.whiteColor),),
       backgroundColor: AppColors.googleGray,
       ),
       backgroundColor: AppColors.googleGray,
@@ -35,11 +38,11 @@ class HomeContacts extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).push(createRoute(AddContact()));
           },
+          backgroundColor: AppColors.googleLightGray,
           child: const Text(
             '+',
             style: TextStyle(fontSize: 26, color: AppColors.googleBackground),
           ),
-          backgroundColor: AppColors.googleLightGray,
         ),
       ),
       body: BlocProvider(
@@ -53,7 +56,17 @@ class HomeContacts extends StatelessWidget {
                 child: CupertinoActivityIndicator(),
               );
             } else if (state is GetUserContactsLoaded) {
+              if(state.data.isEmpty){
+                return Center(child: Text('No Contacts',style: TextStyle(color: Colors.white),),);
+              }
               final data = state.data;
+               data.sort((a, b) {
+                final contactA = a.data() as Map<String, dynamic>?;
+                final contactB = b.data() as Map<String, dynamic>?;
+                final nameA = (contactA?['FirstName'] ?? '') as String;
+                final nameB = (contactB?['FirstName'] ?? '') as String;
+                return nameA.compareTo(nameB);
+              });
               
               return ListView.builder(
                 itemCount: data.length,
@@ -63,25 +76,30 @@ class HomeContacts extends StatelessWidget {
                   if (contact != null) {
                        final firstName = contact['FirstName'] ?? 'No Name';
                     final firstLetter = firstName.isNotEmpty ? firstName[0].toUpperCase() : 'N';
-                        final avatarColor = _getRandomColor();
-                    print(contact);
+                        final avatarColor = getRandomColor();
+                
 
                   
                    return Padding(
                      padding: const EdgeInsets.all(8.0),
                      child: ListTile(
+                      onTap: (){
+                        
+                        Navigator.of(context).push(createRoute( ContactDeatils(data:contact,avatarColor: avatarColor,firstLetter: firstLetter,)));
+                      },
                         leading: CircleAvatar(
                           radius: 25,
                           backgroundColor: avatarColor,
                           child: Text(
                             firstLetter,
                             style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                              color: Colors.black,
+                             
                             ),
                           ),
                         ),
-                        title: Text(firstName,style: TextStyle(color: AppColors.whiteColor,fontSize: 18),),
+                        title: Text(firstName,style:const TextStyle(color: AppColors.whiteColor,fontSize: 18),),
                       ),
                    );
                   } else {
