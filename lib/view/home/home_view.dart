@@ -85,7 +85,7 @@ Color getRandomColor() {
                      child: ListTile(
                       onTap: (){
                         
-                        Navigator.of(context).push(createRoute( ContactDeatils(data:contact,avatarColor: avatarColor,firstLetter: firstLetter,)));
+                        Navigator.of(context).push(createRoute(ContactDeatils(data:contact,avatarColor: avatarColor,firstLetter: firstLetter,)));
                       },
                         leading: CircleAvatar(
                           radius: 25,

@@ -1,9 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:houzeocontacts/animations/route.dart';
+import 'package:houzeocontacts/bottom_navigation/bottom_nav.dart';
 import 'package:houzeocontacts/constants/colors.dart';
 import 'package:houzeocontacts/constants/height_width.dart';
+import 'package:houzeocontacts/services/contact_services.dart';
+import 'package:houzeocontacts/view/home/add_favourite/bloc/favourites_add_bloc.dart';
 import 'package:houzeocontacts/view/home/edit_contact/edit_contact.dart';
+import 'package:houzeocontacts/widgets/custom_like_button.dart';
 import 'package:houzeocontacts/widgets/custom_round.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactDeatils extends StatelessWidget {
   Map<String, dynamic> data;
@@ -41,14 +49,14 @@ class ContactDeatils extends StatelessWidget {
                   backgroundColor: avatarColor,
                   child: Text(
                     firstLetter,
-                    style:
-                        const TextStyle(fontSize: 80, fontWeight: FontWeight.normal),
+                    style: const TextStyle(
+                        fontSize: 80, fontWeight: FontWeight.normal),
                   ),
                 ),
               ),
               AppConstants.kheight20,
               Text(
-                data['FirstName'].toString()+" ${data['SecondName']}",
+                data['FirstName'].toString() + " ${data['SecondName']}",
                 style: const TextStyle(color: Colors.white, fontSize: 27),
               ),
               AppConstants.kheight20,
@@ -57,7 +65,9 @@ class ContactDeatils extends StatelessWidget {
                 children: [
                   CustomRoundButton(
                     icons: Icons.call,
-                    onPressed: () {},
+                    onPressed: () async {
+                   await requestPhonePermission();
+                    },
                     buttontext: 'Call',
                   ),
                   CustomRoundButton(
@@ -75,16 +85,98 @@ class ContactDeatils extends StatelessWidget {
                     },
                     buttontext: 'Edit',
                   ),
-                  CustomRoundButton(
-                    icons: Icons.favorite,
-                    onPressed: () {},
-                    buttontext: 'Favourite',
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      BlocConsumer<FavouritesAddBloc, FavouritesAddState>(
+                          listener: (context, state) {},
+                          builder: (context, state) {
+                            return FutureBuilder<bool>(
+                              future: ContactServices().isAlreadyFavourited(
+                                  data['FirstName'], data['UserPhone']),
+                              builder: (context, snapshot) {
+                                bool isFavorited =
+                                    snapshot.hasData && snapshot.data == true;
+
+                                return CustomLikeButton(
+                                    isFavorited: isFavorited,
+                                    onLikeButtonTapped: (bool isLiked) async {
+                                      if (isLiked) {
+                                        final removalSuccess =
+                                            await ContactServices()
+                                                .removeUserSaved(data['Id']);
+                                        if (removalSuccess) {
+                                          context
+                                              .read<FavouritesAddBloc>()
+                                              .add(FavUnsave(
+                                                data['Id'],
+                                              ));
+                                        }
+                                        return !removalSuccess;
+                                      } else {
+                                        // Add to favorites
+                                        context
+                                            .read<FavouritesAddBloc>()
+                                            .add(IdChanges(data['Id']));
+                                        context.read<FavouritesAddBloc>().add(
+                                            FirstNameChanges(
+                                                data['FirstName']));
+                                        context.read<FavouritesAddBloc>().add(
+                                            SecondNameChanges(
+                                                data['SecondName']));
+                                        context.read<FavouritesAddBloc>().add(
+                                            PhoneChanges(data['UserPhone']));
+                                        context
+                                            .read<FavouritesAddBloc>()
+                                            .add(UserEmail(data['UserEmail']));
+                                        context.read<FavouritesAddBloc>().add(
+                                            NickNameChanges(
+                                                data['UserNickName']));
+
+                                        context
+                                            .read<FavouritesAddBloc>()
+                                            .add(FormSubmit());
+
+                                        return true;
+                                      }
+                                    });
+                              },
+                            );
+                          }),
+                      AppConstants.kwidth20,
+                      CustomRoundButton(
+                        icons: Icons.delete,
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Are you sure to delete'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          FirebaseFirestore.instance
+                                              .collection("UserContacts")
+                                              .doc(data['Id'])
+                                              .delete();
+                                          Navigator.of(context).push(
+                                              createRoute(
+                                                  const BottomNavigation()));
+                                        },
+                                        child: const Text('Yes')),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('No'))
+                                  ],
+                                );
+                              });
+                        },
+                        buttontext: 'Delete',
+                      )
+                    ],
                   ),
-                  CustomRoundButton(
-                    icons: Icons.delete,
-                    onPressed: () {},
-                    buttontext: 'Delete',
-                  )
                 ],
               ),
               AppConstants.kheight40,
@@ -182,4 +274,21 @@ class ContactDeatils extends StatelessWidget {
       ),
     );
   }
+  Future<void> requestPhonePermission() async {
+  PermissionStatus status = await Permission.phone.request();
+  if (status.isGranted) {
+  await _makeCall();
+  } else {
+      Text('Calling failed');
+  }
+}
+ Future<void> _makeCall() async {
+    final Uri telUri = Uri(scheme: 'tel', path:  data['UserPhone'].toString());
+    if (await canLaunchUrl(telUri)) {
+      await launchUrl(telUri);
+    } else {
+      throw 'Could not launch call';
+    }
+  }
+   
 }

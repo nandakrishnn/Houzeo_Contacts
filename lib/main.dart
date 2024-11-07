@@ -5,6 +5,7 @@ import 'package:houzeocontacts/bottom_navigation/bottom_nav.dart';
 import 'package:houzeocontacts/firebase_options.dart';
 import 'package:houzeocontacts/services/contact_services.dart';
 import 'package:houzeocontacts/view/add_contact/add_contact_bloc/add_contact_bloc.dart';
+import 'package:houzeocontacts/view/home/add_favourite/bloc/favourites_add_bloc.dart';
 import 'package:houzeocontacts/view/home/get_contact_bloc/get_contact_info_bloc.dart';
 
 void main() async {
@@ -30,6 +31,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => GetContactInfoBloc(ContactServices()),
        
+        ),
+        BlocProvider(
+          create: (context) => FavouritesAddBloc(ContactServices()),
+          child: Container(),
         )
       ],
     

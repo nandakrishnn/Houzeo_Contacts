@@ -48,4 +48,35 @@ class ContactServices{
       return false;
     }
   }
+      Future<bool> addContactFav(
+      Map<String, dynamic> userContactInfo, dynamic id) async {
+    try {
+      await FirebaseFirestore.instance.collection("UserFavourites").doc(id).set(userContactInfo);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+   Future<bool>removeUserSaved(String itemid)async{
+   try {
+      await FirebaseFirestore.instance.collection("UserFavourites").doc(itemid).delete();
+    return true;
+   } catch (e) {
+     return false;
+   }
+}
+ Future<bool> isAlreadyFavourited(String firstName, int userPhone) async {
+  try {
+   
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("UserFavourites")
+        .where("FirstName", isEqualTo: firstName)
+        .where("UserPhone", isEqualTo: userPhone)
+        .get();
+    return querySnapshot.docs.isNotEmpty?true:false;
+  } catch (e) {
+    print("Error checking favorite: $e");
+    return false;
+  }
+}
 }

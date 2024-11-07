@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:houzeocontacts/animations/route.dart';
+import 'package:houzeocontacts/bottom_navigation/bottom_nav.dart';
 import 'package:houzeocontacts/constants/colors.dart';
 import 'package:houzeocontacts/constants/height_width.dart';
 import 'package:houzeocontacts/constants/validators.dart';
@@ -54,7 +56,7 @@ class EditContact extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        automaticallyImplyLeading: false,
+     
         backgroundColor: AppColors.googleGray,
         title: const Text(
           'Edit contact',
@@ -152,7 +154,7 @@ class EditContact extends StatelessWidget {
                         ),
                         Colors.green,
                       ));
-                      Navigator.of(context).pop();
+                      Navigator.of(context).push(createRoute(const BottomNavigation()));
                       
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(customSnack(

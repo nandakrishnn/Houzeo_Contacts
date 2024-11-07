@@ -72,9 +72,9 @@ class AddContactBloc extends Bloc<AddContactEvent, AddContactState> {
         state.secondName, state.userEmail, state.userPhone, state.nickName,state.id);
 
     if (added == true) {
-      print('Details Updated');
+      debugPrint('Details Updated');
     } else {
-      print('Not updated');
+      debugPrint('Not updated');
     }
   }
    void _clearForm(ClearForm event, Emitter<AddContactState> emit) {

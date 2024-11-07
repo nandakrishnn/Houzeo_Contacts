@@ -27,7 +27,7 @@ class AddContact extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        automaticallyImplyLeading: false,
+       
         backgroundColor: AppColors.googleGray,
         title: const Text(
           'Create contact',
