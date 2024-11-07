@@ -57,7 +57,7 @@ class EditContact extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
      
-        backgroundColor: AppColors.googleGray,
+        backgroundColor: AppColors.colorGray,
         title: const Text(
           'Edit contact',
           style: TextStyle(
@@ -65,7 +65,7 @@ class EditContact extends StatelessWidget {
           ),
         ),
       ),
-      backgroundColor: AppColors.googleGray,
+      backgroundColor: AppColors.colorGray,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(

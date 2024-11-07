@@ -29,7 +29,7 @@ class Validators {
 
   // Validate Phone Number
   static String? validatePhoneNumber(String? value) {
-    String pattern = r'^\d{10}$'; // Ensures exactly 10 digits
+    String pattern = r'^\d{10}$'; 
     RegExp regExp = RegExp(pattern);
 
     if (value == null || value.isEmpty) {
@@ -45,7 +45,7 @@ class Validators {
     if (value == null || value.isEmpty) {
       return 'Please enter your email address';
     }
-    String pattern = r'^[^@]+@[^@]+\.[^@]+$'; // Basic email format
+    String pattern = r'^[^@]+@[^@]+\.[^@]+$'; 
     RegExp regex = RegExp(pattern);
     if (!regex.hasMatch(value)) {
       return 'Please enter a valid email address';

@@ -28,7 +28,7 @@ class AddContact extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
        
-        backgroundColor: AppColors.googleGray,
+        backgroundColor: AppColors.colorGray,
         title: const Text(
           'Create contact',
           style: TextStyle(
@@ -36,7 +36,7 @@ class AddContact extends StatelessWidget {
           ),
         ),
       ),
-      backgroundColor: AppColors.googleGray,
+      backgroundColor: AppColors.colorGray,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(

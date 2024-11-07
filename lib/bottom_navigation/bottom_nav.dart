@@ -58,7 +58,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         builder: (context, isVisible, child) {
           return AnimatedContainer(
             duration: const Duration(milliseconds: 300),
-            height: isVisible ? kBottomNavigationBarHeight + 15 : 0,
+            height: isVisible ? kBottomNavigationBarHeight + 20 : 0,
             child: isVisible ? child : const SizedBox.shrink(),
           );
         },
@@ -74,22 +74,22 @@ class _BottomNavigationState extends State<BottomNavigation> {
                   blurRadius: 5,
                 )
               ],
-              color: AppColors.googleLightGray, 
+              color: Color.fromARGB(255, 97, 100, 103), 
               borderRadius: BorderRadius.circular(35),
             ),
             child: Padding(
               padding: const EdgeInsets.all(2.0),
               child: GNav(
                 haptic: true,
-                color: AppColors.googleRed,
-                activeColor: AppColors.googleGray,
+                color: AppColors.redColor,
+                activeColor: AppColors.colorGray,
                 gap: 8,
                 onTabChange: setPage,
                 padding: const EdgeInsets.all(16),
-                textStyle:  TextStyle(color: AppColors.googleGray,fontSize: 18),
-                tabBackgroundColor: AppColors.googleBlue,
+                textStyle:  const TextStyle(color: AppColors.colorGray,fontSize: 18),
+                tabBackgroundColor: AppColors.backgroundColor,
                 selectedIndex: currentIndex, // Ensure correct tab is highlighted
-                tabs:  [
+                tabs:  const [
                   GButton(
                
                     icon: Icons.home,

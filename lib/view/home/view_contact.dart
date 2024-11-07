@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:houzeocontacts/animations/route.dart';
 import 'package:houzeocontacts/bottom_navigation/bottom_nav.dart';
 import 'package:houzeocontacts/constants/colors.dart';
 import 'package:houzeocontacts/constants/height_width.dart';
 import 'package:houzeocontacts/services/contact_services.dart';
-import 'package:houzeocontacts/view/home/add_favourite/bloc/favourites_add_bloc.dart';
+import 'package:houzeocontacts/view/home/add_favourite/add_fav_bloc/favourites_add_bloc.dart';
 import 'package:houzeocontacts/view/home/edit_contact/edit_contact.dart';
 import 'package:houzeocontacts/widgets/custom_like_button.dart';
 import 'package:houzeocontacts/widgets/custom_round.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ContactDeatils extends StatelessWidget {
   Map<String, dynamic> data;
@@ -27,14 +27,14 @@ class ContactDeatils extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.googleGray,
+      backgroundColor: AppColors.colorGray,
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
           'Contacts Details',
           style: TextStyle(color: AppColors.whiteColor),
         ),
-        backgroundColor: AppColors.googleGray,
+        backgroundColor: AppColors.colorGray,
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -66,7 +66,7 @@ class ContactDeatils extends StatelessWidget {
                   CustomRoundButton(
                     icons: Icons.call,
                     onPressed: () async {
-                   await requestPhonePermission();
+                      await requestPhonePermission();
                     },
                     buttontext: 'Call',
                   ),
@@ -185,7 +185,7 @@ class ContactDeatils extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: AppColors.googleLightGray,
+                  color: AppColors.colorLightGray,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
@@ -231,6 +231,8 @@ class ContactDeatils extends StatelessWidget {
                           Column(
                             children: [
                               Text(
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                                 data['UserEmail']?.toString().isNotEmpty == true
                                     ? data['UserEmail'].toString()
                                     : 'Add Email to view',
@@ -253,6 +255,8 @@ class ContactDeatils extends StatelessWidget {
                           Column(
                             children: [
                               Text(
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                                 data['UserNickName']?.toString().isNotEmpty ==
                                         true
                                     ? data['UserNickName'].toString()
@@ -274,21 +278,26 @@ class ContactDeatils extends StatelessWidget {
       ),
     );
   }
+
+  static const platform = MethodChannel('com.example.houzeocontacts/call');
+
+
   Future<void> requestPhonePermission() async {
-  PermissionStatus status = await Permission.phone.request();
-  if (status.isGranted) {
-  await _makeCall();
-  } else {
-      Text('Calling failed');
-  }
-}
- Future<void> _makeCall() async {
-    final Uri telUri = Uri(scheme: 'tel', path:  data['UserPhone'].toString());
-    if (await canLaunchUrl(telUri)) {
-      await launchUrl(telUri);
+    PermissionStatus status = await Permission.phone.request();
+    if (status.isGranted) {
+      await _makeDirectCall();
     } else {
-      throw 'Could not launch call';
+      debugPrint('Permission denied for making calls');
     }
   }
-   
+    Future<void> _makeDirectCall() async {
+    try {
+      final phoneNumber = data['UserPhone'].toString();
+      await platform
+          .invokeMethod('makeDirectCall', {'phoneNumber': phoneNumber});
+    } on PlatformException catch (e) {
+      debugPrint("Failed to make call ${e.message}");
+    }
+  }
+
 }

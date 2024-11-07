@@ -1,5 +1,3 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:houzeocontacts/constants/colors.dart';
 
@@ -24,7 +22,7 @@ class CustomRoundButton extends StatelessWidget {
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             foregroundColor: AppColors.whiteColor,
-            backgroundColor: AppColors.googleLightGray,
+            backgroundColor: AppColors.colorLightGray,
             shape: const CircleBorder(),
             padding: const EdgeInsets.all(15),
             elevation: 10,

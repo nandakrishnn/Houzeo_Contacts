@@ -7,7 +7,7 @@ class CustomLikeButton extends StatelessWidget {
   final bool isFavorited;
   final Future<bool> Function(bool) onLikeButtonTapped;
 
-  CustomLikeButton({
+  const CustomLikeButton({
     super.key,
     required this.isFavorited,
     required this.onLikeButtonTapped,
@@ -19,17 +19,17 @@ class CustomLikeButton extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: AppColors.googleLightGray, 
+            color: AppColors.colorLightGray, 
             shape: BoxShape.circle, 
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.2),
                 blurRadius: 6,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
-          padding: EdgeInsets.all(13), 
+          padding: const EdgeInsets.all(13), 
           child: LikeButton(
             isLiked: isFavorited,
             circleColor: const CircleColor(
@@ -51,9 +51,9 @@ class CustomLikeButton extends StatelessWidget {
           ),
         ),
      AppConstants.kheight10,
-          Text(
+          const Text(
             'Favorite',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               color: Colors.white,
             ),
