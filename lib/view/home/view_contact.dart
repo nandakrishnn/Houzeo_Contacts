@@ -11,6 +11,7 @@ import 'package:houzeocontacts/view/home/add_favourite/add_fav_bloc/favourites_a
 import 'package:houzeocontacts/view/home/edit_contact/edit_contact.dart';
 import 'package:houzeocontacts/widgets/custom_like_button.dart';
 import 'package:houzeocontacts/widgets/custom_round.dart';
+import 'package:houzeocontacts/widgets/custom_snack.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ContactDeatils extends StatelessWidget {
@@ -58,6 +59,8 @@ class ContactDeatils extends StatelessWidget {
               Text(
                 data['FirstName'].toString() + " ${data['SecondName']}",
                 style: const TextStyle(color: Colors.white, fontSize: 27),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
               AppConstants.kheight20,
               Row(
@@ -159,6 +162,17 @@ class ContactDeatils extends StatelessWidget {
                                               .collection("UserContacts")
                                               .doc(data['Id'])
                                               .delete();
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(customSnack(
+                                            'Contact Deleted',
+                                            'Contact Deleted sucessfully',
+                                            const Icon(
+                                              Icons.done,
+                                              color: Colors.green,
+                                              size: 28,
+                                            ),
+                                            Colors.green,
+                                          ));
                                           Navigator.of(context).push(
                                               createRoute(
                                                   const BottomNavigation()));
@@ -281,7 +295,6 @@ class ContactDeatils extends StatelessWidget {
 
   static const platform = MethodChannel('com.example.houzeocontacts/call');
 
-
   Future<void> requestPhonePermission() async {
     PermissionStatus status = await Permission.phone.request();
     if (status.isGranted) {
@@ -290,7 +303,8 @@ class ContactDeatils extends StatelessWidget {
       debugPrint('Permission denied for making calls');
     }
   }
-    Future<void> _makeDirectCall() async {
+
+  Future<void> _makeDirectCall() async {
     try {
       final phoneNumber = data['UserPhone'].toString();
       await platform
@@ -299,5 +313,4 @@ class ContactDeatils extends StatelessWidget {
       debugPrint("Failed to make call ${e.message}");
     }
   }
-
 }

@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:houzeocontacts/services/contact_services.dart';
-import 'package:random_string/random_string.dart';
 
 part 'favourites_add_event.dart';
 part 'favourites_add_state.dart';
